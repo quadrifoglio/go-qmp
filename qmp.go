@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+// Open creates a connection to QMP at the specified address using the named protocol
+// Protocol can be tcp or unix
 func Open(proto, addr string) (Session, error) {
 	var s Session
 
@@ -35,10 +37,12 @@ func Open(proto, addr string) (Session, error) {
 	return s, nil
 }
 
+// Close closes the connection
 func (s Session) Close() error {
 	return s.c.Close()
 }
 
+// Command sends a command and returns the response from QEMU.
 func (s Session) Command(command string, arguments map[string]string) (JsonObject, error) {
 	cmd := make(JsonObject)
 	cmd["execute"] = command
@@ -52,7 +56,7 @@ func (s Session) Command(command string, arguments map[string]string) (JsonObjec
 		return nil, fmt.Errorf("qmp: encode json: %s", err)
 	}
 
-	t, data, err := s.Read()
+	t, data, err := s.read()
 	if err != nil {
 		return nil, err
 	}
@@ -80,11 +84,12 @@ func (s Session) Command(command string, arguments map[string]string) (JsonObjec
 	return nil, fmt.Errorf("qmp: unknown message")
 }
 
+// HumanMonitorCommand sends a HMP command to QEMU via the QMP protocol
 func (s Session) HumanMonitorCommand(command string) (JsonObject, error) {
 	return s.Command("human-monitor-command", map[string]string{"command-line": command})
 }
 
-func (s *Session) Read() (MessageType, []byte, error) {
+func (s *Session) read() (MessageType, []byte, error) {
 	scanner := bufio.NewScanner(s.c)
 
 	for scanner.Scan() {
