@@ -1,6 +1,10 @@
 # Go-QMP - Golang interface to QMP
 
-## Usage
+The QEMU Machine Protocol (QMP) is a JSON-based protocol which allows applications to control a QEMU instance.
+
+This library offers a simple interface to QMP for the Go programming language.
+
+## Basic Usage
 
 ```go
 import "github.com/quadrifoglio/go-qmp"
@@ -8,15 +12,15 @@ import "github.com/quadrifoglio/go-qmp"
 // Connection to QMP
 c, err := qmp.Open("unix", "/tmp/qmp.sock")
 if err != nil {
-	return err
+	log.Fatal(err)
 }
 
-defer c.Close() 
+defer c.Close()
 
 // Execute simple QMP command
 result, err = c.Command("query-status", nil)
 if err != nil {
-	return err
+	log.Fatal(err)
 }
 
 fmt.Println(result)
@@ -29,12 +33,12 @@ args := map[string]string {
 
 result, err = c.Command("eject", args)
 if err != nil {
-	return err
+	log.Fatal(err)
 }
 
 // Execute HMP command
 result, err = c.HumanMonitorCommand("savevm checkpoint")
 if err != nil {
-	return err
+	log.Fatal(err)
 }
 ```
