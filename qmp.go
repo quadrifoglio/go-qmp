@@ -43,7 +43,7 @@ func (s Session) Close() error {
 }
 
 // Command sends a command and returns the response from QEMU.
-func (s Session) Command(command string, arguments map[string]string) (JsonObject, error) {
+func (s Session) Command(command string, arguments map[string]string) (JsonValue, error) {
 	cmd := make(JsonObject)
 	cmd["execute"] = command
 
@@ -85,7 +85,7 @@ func (s Session) Command(command string, arguments map[string]string) (JsonObjec
 }
 
 // HumanMonitorCommand sends a HMP command to QEMU via the QMP protocol
-func (s Session) HumanMonitorCommand(command string) (JsonObject, error) {
+func (s Session) HumanMonitorCommand(command string) (JsonValue, error) {
 	return s.Command("human-monitor-command", map[string]string{"command-line": command})
 }
 

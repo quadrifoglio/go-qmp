@@ -8,6 +8,7 @@ const (
 	MessageTypeEvent   = 3
 )
 
+type JsonValue interface{}
 type JsonObject map[string]interface{}
 type JsonArray []interface{}
 
@@ -47,7 +48,7 @@ type Timestamp struct {
 
 // SuccessMessage is a successfull response from QMP
 type SuccessMessage struct {
-	Return JsonObject `json:"return"`
+	Return JsonValue `json:"return"`
 }
 
 // ErrorMessage represents an error sent by QMP
